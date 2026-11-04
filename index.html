@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <title>QuofTech – School Suite Pricing Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; color: black; }
+            .shadow-card { box-shadow: none !important; border: 1px solid #e2e8f0; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+
+    <!-- Header / Branding -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <!-- NextGen Systems Logo Placeholder -->
+                <!-- <div class="w-12 h-12 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-md border border-sky-400/30">
+                    N
+                </div> -->
+                <img style="width: auto; height: 60px;" src="images/logo.png" alt="QuofTech">
+                <div>
+                    <!-- <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                        QuofTech <span class="text-sky-400 font-light">Systems</span>
+                    </h1> -->
+                    <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                        QuofTech
+                    </h1>
+                    <p class="text-xs text-slate-400 tracking-wider uppercase font-medium">QuofTech School Suite Pricing & Investment Estimator</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 no-print">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Currency: GHS (Ghana Cedis)
+                </span>
+                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-lg border border-slate-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-print">="</i> Print / Save PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-900">Interactive Proposal & Cost Estimator</h2>
+            <p class="text-slate-600 text-sm">Tailor the software package and student headcount to project exact termly and annual costs for your school.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- CONTROLS PANEL (LEFT) -->
+            <div class="lg:col-span-5 space-y-6 no-print">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+                    <h3 class="text-lg font-semibold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-sky-600"></i> Configure Parameters
+                    </h3>
+
+                    <!-- Student Count Input -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="studentCountInput" class="text-sm font-medium text-slate-700">Total Student Enrolment</label>
+                            <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2.5 py-1 rounded-md" id="studentDisplay">400 Students</span>
+                        </div>
+                        <input type="range" id="studentSlider" min="50" max="2500" step="25" value="400" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600">
+                        <div class="mt-2 flex items-center gap-2">
+                            <input type="number" id="studentInput" value="400" min="1" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                            <span class="text-xs text-slate-500">Students</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Model Selection -->
+                    <div>
+                        <label class="text-sm font-medium text-slate-700 block mb-2">Acquisition Model</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="paymentModel" value="saas" checked class="peer sr-only" onchange="calculatePricing()">
+                                <div class="p-3 border-2 border-slate-200 rounded-xl peer-checked:border-sky-600 peer-checked:bg-sky-50/50 transition text-center">
+                                    <div class="font-semibold text-sm text-slate-900">SaaS Model</div>
+                                    <div class="text-xs text-slate-500 mt-1">Per Student / Term</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="paymentModel" value="onetime" class="peer sr-only" onchange="calculatePricing()">
+                                <div class="p-3 border-2 border-slate-200 rounded-xl peer-checked:border-sky-600 peer-checked:bg-sky-50/50 transition text-center">
+                                    <div class="font-semibold text-sm text-slate-900">One-Time Fee</div>
+                                    <div class="text-xs text-slate-500 mt-1">Lifetime Software License</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Package Tier Selection -->
+                    <div>
+                        <label class="text-sm font-medium text-slate-700 block mb-2">Package Tier</label>
+                        <div class="space-y-3">
+                            <label class="block cursor-pointer">
+                                <input type="radio" name="packageTier" value="standard" class="peer sr-only" onchange="calculatePricing()">
+                                <div class="p-4 border-2 border-slate-200 rounded-xl peer-checked:border-sky-600 peer-checked:bg-sky-50/50 transition flex items-start justify-between">
+                                    <div>
+                                        <div class="font-semibold text-sm text-slate-900">Standard Package</div>
+                                        <div class="text-xs text-slate-500 mt-0.5">Admin + Teachers Dashboard</div>
+                                    </div>
+                                    <span class="text-xs font-bold text-sky-700 bg-sky-100 px-2 py-1 rounded">GHS 5/term | GHS 10k</span>
+                                </div>
+                            </label>
+
+                            <label class="block cursor-pointer">
+                                <input type="radio" name="packageTier" value="full" checked class="peer sr-only" onchange="calculatePricing()">
+                                <div class="p-4 border-2 border-slate-200 rounded-xl peer-checked:border-sky-600 peer-checked:bg-sky-50/50 transition flex items-start justify-between relative overflow-hidden">
+                                    <div class="absolute -right-8 -top-8 w-16 h-16 bg-sky-500 rotate-45 flex items-end justify-center pb-1 shadow-sm">
+                                        <i class="fa-solid fa-star text-white text-[10px]"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-sm text-slate-900 flex items-center gap-1.5">
+                                            Full Package <span class="text-[10px] bg-sky-600 text-white font-bold px-1.5 py-0.5 rounded">RECOMMENDED</span>
+                                        </div>
+                                        <div class="text-xs text-slate-500 mt-0.5">Admin + Teachers + Guardian/Parent Portal</div>
+                                    </div>
+                                    <span class="text-xs font-bold text-sky-700 bg-sky-100 px-2 py-1 rounded">GHS 8/term | GHS 12k</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- SMS Add-On Switch -->
+                    <div class="pt-2 border-t border-slate-100">
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <div>
+                                <div class="text-sm font-medium text-slate-800">Include Annual SMS Bundle</div>
+                                <div class="text-xs text-slate-500" id="smsPriceLabel">GHS 100 / year</div>
+                            </div>
+                            <input type="checkbox" id="smsToggle" checked onchange="calculatePricing()" class="w-5 h-5 accent-sky-600 rounded">
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RESULTS SUMMARY (RIGHT) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Main Cost Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- Termly Payment Card -->
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Termly Billing (1 Term / Year)</div>
+                        <div class="text-3xl font-extrabold text-slate-900" id="termlySoftwareCost">GHS 0</div>
+                        <div class="text-xs text-slate-500 mt-1" id="termlySubtitle">Software charge per academic term</div>
+                    </div>
+
+                    <!-- Total Year 1 Outlay -->
+                    <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                        <div class="text-xs font-bold uppercase tracking-wider text-sky-400 mb-1">Year 1 Total Investment</div>
+                        <div class="text-3xl font-extrabold text-white" id="totalYear1Cost">GHS 0</div>
+                        <div class="text-xs text-slate-300 mt-1">Includes software, hosting, domain & SMS</div>
+                    </div>
+
+                </div>
+
+                <!-- Detailed Financial Breakdown Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden shadow-card">
+                    <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-900 text-base">Cost Breakdown Summary</h3>
+                        <span class="text-xs text-slate-500 font-medium" id="summaryHeaderCount">400 Students</span>
+                    </div>
+                    
+                    <div class="divide-y divide-slate-100 text-sm">
+                        
+                        <div class="p-4 flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold text-slate-800" id="softwareTitle">Software License / Subscription</div>
+                                <div class="text-xs text-slate-500" id="softwareDetail">GHS 8 × 400 students × 3 terms</div>
+                            </div>
+                            <div class="font-bold text-slate-900 text-right" id="softwareAnnualTotal">GHS 9,600 / yr</div>
+                        </div>
+
+                        <div class="p-4 flex justify-between items-center bg-slate-50/30">
+                            <div>
+                                <div class="font-semibold text-slate-800">Hosting & Infrastructure (Mandatory)</div>
+                                <div class="text-xs text-slate-500">Cloud Database ($20/mo) + Dedicated Domain ($13/yr)</div>
+                            </div>
+                            <div class="font-bold text-slate-900 text-right">GHS 3,000 / yr</div>
+                        </div>
+
+                        <div class="p-4 flex justify-between items-center">
+                            <div>
+                                <div class="font-semibold text-slate-800">SMS Notification Package (Optional)</div>
+                                <div class="text-xs text-slate-500" id="smsDetailText">Full Package discount applied</div>
+                            </div>
+                            <div class="font-bold text-slate-900 text-right" id="smsCostDisplay">GHS 100 / yr</div>
+                        </div>
+
+                        <div class="p-4 bg-sky-50/60 flex justify-between items-center font-bold">
+                            <span class="text-sky-900">Total Year 1 Expenditure</span>
+                            <span class="text-sky-900 text-lg" id="breakdownYear1Total">GHS 12,650</span>
+                        </div>
+
+                        <div class="p-4 bg-slate-100/70 flex justify-between items-center font-medium text-slate-700">
+                            <span>Year 2+ Recurring Annual Cost</span>
+                            <span class="text-slate-900 font-bold" id="year2OngoingCost">GHS 12,650 / yr</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ROI / Parent Fee Recovery Box -->
+                <!-- <div class="bg-gradient-to-br from-emerald-500/10 via-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5 text-emerald-950">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                            <i class="fa-solid fa-coins text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-emerald-900 text-sm">How to Make NextGen School Suite 100% Self-Funding</h4>
+                            <p class="text-xs text-emerald-800/90 mt-1 leading-relaxed">
+                                By incorporating a modest ICT levy of <strong class="text-emerald-950" id="recommendedFeePerTerm">GHS 11.00</strong> per student into the termly bill, the school completely recovers all software, hosting, and SMS expenses.
+                            </p>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Dynamic Value Highlight -->
+                <div class="p-4 rounded-xl border border-amber-200 bg-amber-50 text-amber-900 text-xs flex items-center gap-3" id="smsSavingsCallout">
+                    <i class="fa-solid fa-lightbulb text-amber-600 text-base"></i>
+                    <span><strong>Pro Tip:</strong> Upgrading to the Full Package saves you GHS 200/year on SMS because parents view report cards directly inside the Guardian Dashboard!</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-xs text-slate-400 border-t border-slate-200 pt-6">
+        <p>© QuofTech Systems. All rights reserved. | QuofTech School Suite Official Proposal Tool</p>
+    </footer>
+
+    <!-- Logic Script -->
+    <script src="script.js"></script>
+</body>
+</html>
