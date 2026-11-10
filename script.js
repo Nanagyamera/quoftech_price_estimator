@@ -31,7 +31,7 @@ function calculatePricing() {
 
   // Base Rates
   let saasRate = tier === "standard" ? 5 : 8;
-  let oneTimeRate = tier === "standard" ? 15000 : 20000;
+  let oneTimeRate = tier === "standard" ? 20000 : 30000;
   let smsRate = tier === "standard" ? 300 : 100;
 
   document.getElementById("smsPriceLabel").innerText = `GHS ${smsRate} / year`;
